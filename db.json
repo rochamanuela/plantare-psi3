@@ -1,0 +1,30 @@
+{
+    "items": [
+      { "id": 1,  "code": "ALF001", "name": "Alface Crespa", "quantity": 120, "unitPrice": 2.50, "status": "Reabastecido", "active": true },
+      { "id": 2,  "code": "TOM002", "name": "Tomate Italiano", "quantity": 35, "unitPrice": 6.80, "status": "Baixo estoque", "active": true },
+      { "id": 3,  "code": "MIL003", "name": "Milho Verde", "quantity": 0, "unitPrice": 3.20, "status": "Esgotado", "active": false },
+      { "id": 4,  "code": "SOJ004", "name": "Soja em Grão", "quantity": 200, "unitPrice": 4.10, "status": "Reabastecido", "active": true },
+      { "id": 5,  "code": "FEI005", "name": "Feijão Carioca", "quantity": 15, "unitPrice": 9.50, "status": "Baixo estoque", "active": true },
+      { "id": 6,  "code": "ARB006", "name": "Arbusto de Café", "quantity": 80, "unitPrice": 12.00, "status": "Reabastecido", "active": false },
+      { "id": 7,  "code": "CAF007", "name": "Café Torrado e Moído", "quantity": 50, "unitPrice": 22.00, "status": "Reabastecido", "active": true },
+      { "id": 8,  "code": "BAT008", "name": "Batata Doce Roxa", "quantity": 0, "unitPrice": 5.20, "status": "Esgotado", "active": false },
+      { "id": 9,  "code": "CEN009", "name": "Cenoura", "quantity": 45, "unitPrice": 3.90, "status": "Reabastecido", "active": true },
+      { "id": 10, "code": "MAN010", "name": "Mandioca Descascada", "quantity": 8, "unitPrice": 7.00, "status": "Baixo estoque", "active": true },
+      { "id": 11, "code": "BAN011", "name": "Banana Prata", "quantity": 95, "unitPrice": 4.30, "status": "Reabastecido", "active": true },
+      { "id": 12, "code": "MAC012", "name": "Maçã Fuji", "quantity": 0, "unitPrice": 8.00, "status": "Esgotado", "active": false },
+      { "id": 13, "code": "LAR013", "name": "Laranja Bahia", "quantity": 60, "unitPrice": 3.00, "status": "Reabastecido", "active": true },
+      { "id": 14, "code": "UVA014", "name": "Uva Itália", "quantity": 12, "unitPrice": 10.00, "status": "Baixo estoque", "active": false },
+      { "id": 15, "code": "HST015", "name": "Herbicida para Daninhas", "quantity": 0, "unitPrice": 55.00, "status": "Esgotado", "active": true },
+      { "id": 16, "code": "ADT016", "name": "Adubo Orgânico", "quantity": 33, "unitPrice": 24.00, "status": "Reabastecido", "active": true },
+      { "id": 17, "code": "FRT017", "name": "Frango Caipira", "quantity": 18, "unitPrice": 28.00, "status": "Baixo estoque", "active": true },
+      { "id": 18, "code": "OVO018", "name": "Ovos Caipiras (dúzia)", "quantity": 9, "unitPrice": 12.50, "status": "Baixo estoque", "active": true },
+      { "id": 19, "code": "ABO019", "name": "Abóbora Cabotiá", "quantity": 40, "unitPrice": 4.80, "status": "Reabastecido", "active": true },
+      { "id": 20, "code": "ESP020", "name": "Espinafre", "quantity": 3, "unitPrice": 5.50, "status": "Baixo estoque", "active": false },
+      { "id": 21, "code": "RAC021", "name": "Ração para Gado 25kg", "quantity": 14, "unitPrice": 89.90, "status": "Baixo estoque", "active": true },
+      { "id": 22, "code": "FRT022", "name": "Frutas Secas (mix 1kg)", "quantity": 0, "unitPrice": 60.00, "status": "Esgotado", "active": false },
+      { "id": 23, "code": "TOR023", "name": "Torta de Algodão (ração)", "quantity": 22, "unitPrice": 34.00, "status": "Reabastecido", "active": true },
+      { "id": 24, "code": "FOS024", "name": "Fosfato Bicálcico", "quantity": 11, "unitPrice": 42.00, "status": "Baixo estoque", "active": true },
+      { "id": 25, "code": "SEM025", "name": "Sementes de Milho Híbrido", "quantity": 55, "unitPrice": 17.00, "status": "Reabastecido", "active": true }
+    ]
+  }
+  

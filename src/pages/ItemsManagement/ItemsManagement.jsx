@@ -1,107 +1,184 @@
 import React, { useState, useEffect } from "react";
 import "../ItemsManagement/ItemsManagement.css";
+import edit from "../../assets/edit.svg";
+import delete_svg from "../../assets/delete.svg"
 
 export default function ItemsManagement() {
+    const [allItems, setAllItems] = useState([]);
     const [items, setItems] = useState([]);
     const [filter, setFilter] = useState("all");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 5;
+
+    const userName = localStorage.getItem("userName");
+    const initials = userName
+        ? userName.split(" ").map(n => n[0]).join("").toUpperCase()
+        : "??";
+
+    const logout = () => {
+        localStorage.clear();
+        window.location.href = "/";
+    };
 
     useEffect(() => {
-        fetchItems();
-    }, [filter]);
+        loadData();
+    }, [filter, currentPage, searchTerm, statusFilter]);
 
-    const fetchItems = async () => {
+    const loadData = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/items?filter=${filter}`);
-            const data = await response.json();
-            setItems(data);
-        } catch (error) {
-            console.error("Error loading items:", error);
+            const resp = await fetch("/db.json");
+            const data = await resp.json();
+
+            let filtered = data.items;
+
+            if (filter === "active") filtered = filtered.filter(i => i.active);
+            if (filter === "inactive") filtered = filtered.filter(i => !i.active);
+
+            if (statusFilter !== "") {
+                filtered = filtered.filter(i => i.status === statusFilter);
+            }
+
+            if (searchTerm.trim() !== "") {
+                const term = searchTerm.toLowerCase();
+                filtered = filtered.filter(item =>
+                    item.name.toLowerCase().includes(term) ||
+                    item.code.toLowerCase().includes(term)
+                );
+            }
+
+            setAllItems(filtered);
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            setItems(filtered.slice(start, end));
+
+        } catch (err) {
+            console.error("Erro ao carregar mock:", err);
         }
     };
 
-    const toggleActive = async (id, current) => {
-        try {
-            await fetch(`http://localhost:3000/api/items/${id}/active`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ active: !current }),
-            });
-            fetchItems();
-        } catch (error) {
-            console.error("Error updating item:", error);
-        }
+    const totalPages = Math.ceil(allItems.length / itemsPerPage);
+
+    const deleteItem = (id) => {
+        if (!window.confirm("Deseja deletar?")) return;
+
+        alert("Mock local: operação apenas visual.");
+        const updated = allItems.filter(i => i.id !== id);
+        setAllItems(updated);
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        setItems(updated.slice(start, end));
     };
 
-    const deleteItem = async (id) => {
-        if (!window.confirm("Deseja deletar este item?")) return;
-        try {
-            await fetch(`http://localhost:3000/api/items/${id}`, { method: "DELETE" });
-            fetchItems();
-        } catch (error) {
-            console.error("Error deleting item:", error);
+    const toggleActive = (id, current) => {
+        alert("Mock local: operação apenas visual.");
+
+        const updated = allItems.map(item =>
+            item.id === id ? { ...item, active: !current } : item
+        );
+
+        setAllItems(updated);
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        setItems(updated.slice(start, end));
+    };
+
+    const handleStatusFilter = (status) => {
+        if (statusFilter === status) {
+            setStatusFilter("");
+        } else {
+            setStatusFilter(status);
         }
+
+        setCurrentPage(1);
     };
 
     return (
         <div className="items-container">
-
-            {/* Sidebar */}
-            <aside className="sidebar">
-                <div className="icon home">🏠</div>
-                <div className="icon cart">🛒</div>
-                <div className="icon barcode">🏷️</div>
-                <div className="icon settings">🔧</div>
-                <div className="icon logout">↩️</div>
-            </aside>
-
-            {/* Main Section */}
             <main className="content">
 
                 <header className="top-header">
-                    <h1>Gerenciamento de itens</h1>
+                    <h1>Produtos do Catálogo</h1>
 
                     <div className="search-box">
                         <span>🔍</span>
-                        <input type="text" placeholder="Buscar por código ou nome do produto..." />
+                        <input
+                            type="text"
+                            placeholder="Buscar por código ou nome do produto..."
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        />
                     </div>
 
                     <div className="profile">
-                        <div className="profile-icon">MS</div>
-                        <span className="dropdown">⌄</span>
+                        <div className="profile-icon">{initials}</div>
+
+                        <div className="user-info">
+                            <span>{userName}</span>
+                            <button className="logout-btn" onClick={logout}>
+                                Sair
+                            </button>
+                        </div>
                     </div>
                 </header>
 
-                {/* Filters */}
                 <div className="filters">
                     <button
                         className={filter === "all" ? "active" : ""}
-                        onClick={() => setFilter("all")}
+                        onClick={() => { setFilter("all"); setCurrentPage(1); }}
                     >
                         Todos
                     </button>
 
                     <button
                         className={filter === "active" ? "active" : ""}
-                        onClick={() => setFilter("active")}
+                        onClick={() => { setFilter("active"); setCurrentPage(1); }}
                     >
                         Somente Ativos
                     </button>
 
                     <button
                         className={filter === "inactive" ? "active" : ""}
-                        onClick={() => setFilter("inactive")}
+                        onClick={() => { setFilter("inactive"); setCurrentPage(1); }}
                     >
                         Somente Inativos
                     </button>
 
-                    <span className="badge red">Esgotado</span>
-                    <span className="badge yellow">Baixo estoque</span>
-                    <span className="badge blue">Reabastecido</span>
+                    <span
+                        className={`badge red ${statusFilter === "Esgotado" ? "active-status" : ""}`}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleStatusFilter("Esgotado")}
+                    >
+                        Esgotado
+                    </span>
+
+                    <span
+                        className={`badge yellow ${statusFilter === "Baixo estoque" ? "active-status" : ""}`}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleStatusFilter("Baixo estoque")}
+                    >
+                        Baixo estoque
+                    </span>
+
+                    <span
+                        className={`badge blue ${statusFilter === "Reabastecido" ? "active-status" : ""}`}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleStatusFilter("Reabastecido")}
+                    >
+                        Reabastecido
+                    </span>
 
                     <button className="add-item">+ Adicionar novo item</button>
                 </div>
 
-                {/* Table */}
                 <table className="items-table">
                     <thead>
                         <tr>
@@ -111,8 +188,8 @@ export default function ItemsManagement() {
                             <th>PREÇO POR ITEM</th>
                             <th>PREÇO TOTAL</th>
                             <th>STATUS</th>
-                            <th>AÇÕES</th>
                             <th>ITEM ATIVO</th>
+                            <th>AÇÕES</th>
                         </tr>
                     </thead>
 
@@ -126,26 +203,14 @@ export default function ItemsManagement() {
                                 <td>R$ {(item.quantity * item.unitPrice).toFixed(2)}</td>
 
                                 <td>
-                                    <span
-                                        className={`status ${item.status === "Esgotado"
-                                                ? "red"
-                                                : item.status === "Baixo estoque"
-                                                    ? "yellow"
-                                                    : "blue"
-                                            }`}
-                                    >
+                                    <span className={`status ${item.status === "Esgotado"
+                                        ? "red"
+                                        : item.status === "Baixo estoque"
+                                            ? "yellow"
+                                            : "blue"
+                                        }`}>
                                         {item.status}
                                     </span>
-                                </td>
-
-                                <td className="actions">
-                                    <button onClick={() => deleteItem(item.id)} className="delete">
-                                        🗑️
-                                    </button>
-
-                                    <button className="edit">
-                                        ✏️
-                                    </button>
                                 </td>
 
                                 <td>
@@ -158,17 +223,34 @@ export default function ItemsManagement() {
                                         <span className="slider"></span>
                                     </label>
                                 </td>
+
+                                <td className="actions">
+                                    <button className="delete" onClick={() => deleteItem(item.id)}>
+                                        <img src={delete_svg} alt="" />
+                                    </button>
+                                    <button className="edit">
+                                        <img src={edit} alt="" />
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
 
-                {/* Pagination */}
                 <div className="pagination">
-                    <button>{"<"}</button>
-                    <span>Página 1 de 3</span>
-                    <button>{">"}</button>
+                    <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+                        {"<"}
+                    </button>
+
+                    <span>
+                        Página {currentPage} de {totalPages}
+                    </span>
+
+                    <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}>
+                        {">"}
+                    </button>
                 </div>
+
             </main>
         </div>
     );

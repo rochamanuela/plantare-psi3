@@ -1,0 +1,28 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "name": "Julia Santos",
+            "email": "julia@gmail.com",
+            "password": "123456"
+        },
+        {
+            "id": 2,
+            "name": "Marcos Lima",
+            "email": "marcos@gmail.com",
+            "password": "abcd123"
+        },
+        {
+            "id": 3,
+            "name": "Ana Ribeiro",
+            "email": "ana@gmail.com",
+            "password": "senha123"
+        },
+        {
+            "id": 4,
+            "name": "Manuela Rocha",
+            "email": "manuela.rocha@gmail.com",
+            "password": "manu123"
+        }
+    ]
+}
